@@ -1,0 +1,19 @@
+<dependency>
+    <groupId>io.projectreactor</groupId>
+    <artifactId>reactor-core</artifactId>
+    <version>3.4.11</version> <!-- Verifica la versión más reciente en https://projectreactor.io/ -->
+</dependency>
+import reactor.core.publisher.Flux;
+
+public class ReactorExample {
+
+    public static void main(String[] args) {
+        Flux<Integer> reactiveFlux = Flux.just(1, 2, 3, 4, 5);
+        Flux<Integer> transformedFlux = reactiveFlux.map(x -> x * 2);
+        transformedFlux.subscribe(
+                value -> System.out.println("Received: " + value),
+                error -> System.err.println("Error: " + error),
+                () -> System.out.println("Completed")
+        );
+    }
+}
