@@ -1,0 +1,324 @@
+## EJEMPLO EN SCALA
+
+![1920px-Observer_w_update svg](https://github.com/Carlosmicael/Reactiva_Scala/assets/116389799/e9b16e6d-aa9e-4af4-ab97-76acb69decb9)
+
+```scala
+import scala.collection.mutable.ListBuffer
+class Sujeto {
+  private var observadores = ListBuffer[Observador]()
+
+  def agregarObservador(observador: Observador): Unit = {
+    observadores += observador
+  }
+
+  def eliminarObservador(observador: Observador): Unit = {
+    observadores -= observador
+  }
+
+  def notificarCambios(): Unit = {
+    for (observador <- observadores) {
+      observador.actualizar()
+    }
+  }
+}
+trait Observador {
+  def actualizar(): Unit
+}
+class ObservadorConcreto extends Observador {
+  def actualizar(): Unit = {
+    println("Se ha producido un cambio. Actualizando...")
+  }
+}
+val sujeto = new Sujeto
+val observador = new ObservadorConcreto
+sujeto.agregarObservador(observador)
+sujeto.notificarCambios()
+```
+## EXPLICACION DEL CODIGO:
+
+* Sujeto:=>El sujeto en este código es la clase Sujeto. Tiene métodos para agregar observadores (agregarObservador), eliminar observadores (eliminarObservador), y notificar cambios a los observadores (notificarCambios).
+
+```scala
+ class Sujeto {
+  private var observadores = ListBuffer[Observador]()
+  def agregarObservador(observador: Observador): Unit = {
+    observadores += observador
+  }
+  def eliminarObservador(observador: Observador): Unit = {
+    observadores -= observador
+  }
+  def notificarCambios(): Unit = {
+    for (observador <- observadores) {
+      observador.actualizar()
+    }
+  }
+}
+```
+* Observador:=>El observador es representado por el trait (trait) llamado Observador. Este trait define un método abstracto actualizar, que debe ser implementado por las clases concretas que actúan como observadores.
+
+```scala
+  trait Observador {
+  def actualizar(): Unit
+}
+```
+* Implementación Concreta del Observador:=>Una implementación concreta del observador es la clase ObservadorConcreto. Esta clase extiende el trait Observador e implementa el método actualizar, que en este caso, imprime un mensaje indicando que se ha producido un cambio.
+
+```scala
+  class ObservadorConcreto extends Observador {
+  def actualizar(): Unit = {
+    println("Se ha producido un cambio. Actualizando...")
+  }
+}
+```
+* Uso del Patrón Observer:=>En esta parte, se crea una instancia del sujeto (Sujeto) y otra del observador concreto (ObservadorConcreto). Luego, el observador se agrega a la lista de observadores del sujeto usando agregarObservador. Finalmente, se notifican cambios en el sujeto llamando a notificarCambios. En este caso, el observador concreto imprime un mensaje indicando que se ha producido un cambio.
+
+```scala
+val sujeto = new Sujeto
+val observador = new ObservadorConcreto
+
+sujeto.agregarObservador(observador)
+sujeto.notificarCambios()
+```
+
+### FRAMEWORKS REACTIVOS=>
+_Los frameworks reactivos son conjuntos de herramientas y bibliotecas Estos frameworks están diseñados para abordar los desafíos de la programación reactiva, como la concurrencia, la asincronía y la gestión eficiente de eventos._
+
+### 1. Akka (Scala/Java):=>
+_Akka es un toolkit y framework para construir sistemas concurrentes y distribuidos basados en el modelo de actores. Proporciona abstracciones para gestionar concurrencia, distribución y tolerancia a fallos._
+
+### 2. Spring WebFlux (Java):=>
+_Spring WebFlux es un módulo de Spring Framework que proporciona soporte para programación reactiva en aplicaciones web. Utiliza el modelo de programación reactiva basado en el estándar Reactor._
+
+### 3. RxJS (JavaScript):=>
+_RxJS es una biblioteca para programación reactiva en JavaScript. Implementa el patrón Observable y proporciona operadores para manejar flujos de datos asincrónicos._
+
+## EJEMPLO EN SCALA
+
+Akka (Scala/Java):
+Akka es un toolkit y framework para construir sistemas concurrentes y distribuidos basados en el modelo de actores. Proporciona abstracciones para gestionar concurrencia, distribución y tolerancia a fallos.
+***
+
+
+```scala
+ import akka.actor.{Actor, ActorSystem, Props}
+
+class MyActor extends Actor {
+  def receive: Receive = {
+    case "Hola" =>
+      println("¡Hola desde MyActor!")
+    case "Adiós" =>
+      println("Adiós desde MyActor")
+      context.stop(self)
+  }
+}
+
+val system = ActorSystem("EjemploSystem")
+val myActor = system.actorOf(Props[MyActor], "MiActor")
+myActor ! "Hola"
+myActor ! "Adiós"
+system.terminate()
+
+```
+
+## EXPLICACION DEL CODIGO:
+
+* Definición del Actor:=>Aquí se define la clase MyActor que extiende la clase Actor. En Akka, un actor es una unidad de computación concurrente que se comunica a través de mensajes.
+
+```scala
+ class MyActor extends Actor {
+```
+
+* Método receive:=>Este método define el comportamiento del actor. Utiliza el patrón match para manejar diferentes mensajes que el actor puede recibir. En este caso, responde de manera diferente a los mensajes "Hola" y "Adiós". Cuando recibe "Hola", imprime un saludo; cuando recibe "Adiós", imprime una despedida y detiene el actor usando context.stop(self).
+
+```scala
+ def receive: Receive = {
+  case "Hola" =>
+    println("¡Hola desde MyActor!")
+  case "Adiós" =>
+    println("Adiós desde MyActor")
+    context.stop(self)
+}
+```
+* Creación del Actor System y del Actor:=>Se crea un ActorSystem llamado "EjemploSystem". El ActorSystem es el contenedor para todos los actores en una aplicación Akka. Luego, se crea una instancia del actor MyActor utilizando system.actorOf(Props[MyActor], "MiActor").
+
+```scala
+ val system = ActorSystem("EjemploSystem")
+ val myActor = system.actorOf(Props[MyActor], "MiActor")
+```
+
+* Envío de Mensajes al Actor:=>Se envían mensajes al actor usando el operador ! (también conocido como "tell"). En este caso, se envían los mensajes "Hola" y "Adiós" al actor MyActor.
+
+```scala
+ myActor ! "Hola"
+ myActor ! "Adiós"
+```
+* Terminación del Actor System:=>Finalmente, se llama a system.terminate() para cerrar y terminar el ActorSystem después de que los mensajes hayan sido procesados.
+
+```scala
+ system.terminate()
+```
+
+## EJEMPLO EN JAVA
+
+![javaaaa](https://github.com/Carlosmicael/Reactiva_Scala/assets/116389799/ab0fb2fe-d5c7-4480-b07c-1f66e6946721)
+
+Spring WebFlux (Java):
+Spring WebFlux es un módulo de Spring Framework que proporciona soporte para programación reactiva en aplicaciones web. Utiliza el modelo de programación reactiva basado en el estándar Reactor.
+***
+
+```Java
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+public class ReactiveController {
+    @GetMapping("/saludo")
+    public Mono<String> saludar() {
+        return Mono.just("¡Hola desde Spring WebFlux!");
+    }
+}
+```
+
+## EXPLICACION DEL CODIGO:
+
+* Declaración del Controlador:=>Se declara la clase ReactiveController como un controlador Spring gestionado. La anotación @RestController indica que cada método en esta clase es renderizado directamente al cuerpo de la respuesta HTTP, en lugar de devolver una vista.
+
+```Java
+  @RestController
+public class ReactiveController {
+```
+
+* Método saludar:=>Este método es un controlador para manejar las solicitudes HTTP GET en la ruta "/saludo". La anotación @GetMapping indica que este método responderá a las solicitudes HTTP GET en la ruta especificada.
+* El tipo de retorno Mono<String> indica que este método produce un resultado de tipo Mono que contiene un String. En Spring WebFlux, Mono es una clase que representa un resultado asincrónico único o vacío.
+* Dentro del método, se crea un Mono utilizando Mono.just("¡Hola desde Spring WebFlux!"), que representa la respuesta que se enviará cuando el método sea invocado.
+
+```Java
+ @GetMapping("/saludo")
+public Mono<String> saludar() {
+    return Mono.just("Saludos desde Spring WebFlux!");
+}
+```
+
+* Uso del Controlador Reactivo:=>Cuando una solicitud GET se realiza en "/saludo", este controlador reacciona devolviendo un Mono que contiene el mensaje "¡Hola desde Spring WebFlux!".
+
+## EJEMPLO EN JAVASCRIPT
+
+![script](https://github.com/Carlosmicael/Reactiva_Scala/assets/116389799/7ec540a5-81e2-4e31-9f30-54df5e4bec62)
+
+RxJS (JavaScript):
+RxJS es una biblioteca para programación reactiva en JavaScript. Implementa el patrón Observable y proporciona operadores para manejar flujos de datos asincrónicos.
+***
+
+```javascript
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const button = document.getElementById('myButton');
+
+const clicks = fromEvent(button, 'click');
+const positions = clicks.pipe(map(event => event.clientX));
+
+positions.subscribe(x => console.log(x));
+```
+
+## EXPLICACION DEL CODIGO:
+
+* Importación de RxJS:=>Aquí se importan las funciones fromEvent y map de la biblioteca RxJS. fromEvent se utiliza para convertir eventos DOM en un observable, y map se utiliza para transformar los eventos.
+
+```javascript
+ import { fromEvent } from 'rxjs';
+ import { map } from 'rxjs/operators';
+```
+
+* Obtención del Elemento del Botón:=>Se obtiene una referencia al elemento del botón con el id 'myButton'.
+```javascript
+ const clicks = fromEvent(button, 'click');
+```
+
+* Creación del Observable de Eventos:=>Se utiliza fromEvent para convertir los eventos de clic del botón en un observable llamado clicks.
+
+```javascript
+ const clicks = fromEvent(button, 'click');
+```
+
+
+* Transformación de Eventos con map:=>Se utiliza el operador pipe para encadenar operadores en el observable clicks. El operador map se aplica para transformar cada evento de clic en el valor de la propiedad clientX del evento.
+
+```javascript
+ const positions = clicks.pipe(map(event => event.clientX));
+```
+
+* Suscripción al Observable Resultante:=>Se utiliza el método subscribe para suscribirse al observable positions. Cuando se produce un evento de clic, el valor transformado (posición X del clic) se imprime en la consola.
+
+```javascript
+ positions.subscribe(x => console.log(x));
+```
+
+
+![venado](https://github.com/Carlosmicael/Reactiva_Scala/assets/116389799/6685bc65-b23d-464b-8b7f-029df6389d1e)
+
+
+## OPERADORES:
+
+Los operadores son funciones que se aplican a flujos de datos asincrónicos (observables) para realizar transformaciones, filtrados, combinaciones o cualquier otra manipulación de los eventos que fluyen a través de esos observables. Los operadores son una parte fundamental de las bibliotecas y frameworks reactivos, y permiten construir flujos de datos de manera declarativa y componer operaciones de manera más eficiente.
+***
+
+* **Tipos de Operadores:**=>Hay dos tipos principales de operadores en programación reactiva **[operadores de creación]** y **[operadores de transformación]**
+***
+
+> **1. Operadores de Creación:** Estos operadores son responsables de crear observables y generar eventos. Algunos ejemplos comunes incluyen=>
+
+* **from:**  Crea un observable a partir de un array, iterable, promesa u otro objeto que sea "observable".
+
+* **of:** Emite una secuencia de valores específicos como eventos.
+
+* **interval:** Emite secuencialmente números a intervalos de tiempo regulares.
+
+> **2. Operadores de Transformación:** Estos operadores permiten transformar, filtrar o combinar los eventos emitidos por un observable. Algunos ejemplos comunes incluyen:=>
+
+* **map:** Transforma cada elemento del observable aplicando una función.
+
+* **filter:** Filtra los elementos del observable basándose en una condición.
+
+* **merge:** Combina varios observables en uno solo, emitiendo eventos de todos ellos.
+***
+
+* Adicional:=>Los operadores se encadenan en una "tubería" utilizando el método pipe en muchos **[frameworks]** y bibliotecas reactivas. Esta tubería permite componer operadores de manera limpia y legible.
+
+## EJEMPLO DE CODIGO EN SCALA UTILIZANDO LOS DOS OPERADORES:
+
+```Scala
+ import akka.actor.{Actor, ActorSystem, Props}
+import akka.stream.scaladsl.{Source, Sink}
+import akka.stream.ActorMaterializer
+case class Position(x: Int, y: Int)
+class ClickEventActor extends Actor {
+  override def receive: Receive = {
+    case "click" =>
+      sender() ! Position(util.Random.nextInt(200), util.Random.nextInt(200))
+  }
+}
+
+object ReactiveExample extends App {
+  implicit val system: ActorSystem = ActorSystem("ReactiveExample")
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  val clickEventActor = system.actorOf(Props[ClickEventActor], "ClickEventActor")
+  val clicksSource = Source.repeat("click").mapAsync(1)(_ => (clickEventActor ? "click").mapTo[Position])
+  val positionsSink = Sink.foreach[Position](position => println(position))
+  clicksSource.to(positionsSink).run()
+  Thread.sleep(2000)
+  system.terminate()
+}
+```
+* Operador de Creación:=>En este caso, Source.repeat("click") crea un flujo de eventos que repite la cadena "click". Luego, mapAsync se utiliza para transformar cada elemento del flujo (la cadena "click") en una llamada asincrónica al actor ClickEventActor, que responde con una posición.
+
+```javascript
+ val clicksSource = Source.repeat("click").mapAsync(1)(_ => (clickEventActor ? "click").mapTo[Position])
+```
+
+* Operador de Transformación:=>En este caso, Sink.foreach[Position] es un operador de transformación que especifica cómo manejar cada elemento del flujo de salida. En este ejemplo, simplemente imprime cada posición en la consola.
+
+```javascript
+ val positionsSink = Sink.foreach[Position](position => println(position))
+```
