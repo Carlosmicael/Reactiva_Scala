@@ -1,0 +1,243 @@
+package ec.edu.utpl.computacion.prf.pi
+import java.util.Scanner
+import scala.collection.mutable.ListBuffer
+
+object Reactivo {
+  @main
+  def Main(): Unit = {
+    var tecladoReactivo: Scanner = new Scanner(System.in)
+    case class usuario(nombre:String,contra:String,edad:String,estudios:String,nacionalidad:String,civil:String)
+    case class messenger(contrasena:String,mensaje:String)
+    var listMessenger:ListBuffer[messenger]=ListBuffer[messenger]()
+
+
+    var baseDatos:ListBuffer[usuario]= ListBuffer[usuario]()
+    var listEspecial:ListBuffer[usuario]= ListBuffer[usuario]()
+    var listaPersona:ListBuffer[usuario]=ListBuffer[usuario]()
+
+
+
+
+    var estiudent:String="Actualmente=>Estudiando"
+    var reaccion:Boolean=false
+    var indiceTaken:Int=0
+    var flagLine:Boolean=true
+    var flagLine2:Boolean=true
+    //////FUNCIONES REACTIVAS///////////
+
+    ////////////////////////////////////
+    def perfilBaseDatos(baseDatos:ListBuffer[usuario]): Unit = {
+      if (reaccion){
+        println(" _______")
+        println("|       |" + " " + baseDatos(0).nombre)
+        println("|   O   |" + " " + "EDAD=>" + " " + baseDatos(0).edad)
+        println("|  /|\\  |" + " " + "ESTUDIOS=>" + " " + baseDatos(0).estudios)
+        println("|  / \\  |" + " " + "NACIONALIDAD=>" + " " + baseDatos(0).nacionalidad)
+        println("|_______|" + " " + "ESTADO CIVIL=>" + " " + baseDatos(0).civil)
+        println("Escriba si para volver Atras: ")
+        tecladoReactivo.nextLine()
+        var retroceso:String=tecladoReactivo.nextLine()
+        if (retroceso.toLowerCase().equals("si")){
+          menuReactivo()
+        }else{
+          println("error debe escribir si o no")
+          perfilBaseDatos(baseDatos)
+        }
+      }else{
+        println(" _______")
+        println("|       |" + " " + baseDatos(0).nombre)
+        println("|   O   |" + " " + "EDAD=>" + " " + baseDatos(0).edad)
+        println("|  /|\\  |" + " " + "ESTUDIOS=>" + " " + baseDatos(0).estudios)
+        println("|  / \\  |" + " " + "NACIONALIDAD=>" + " " + baseDatos(0).nacionalidad)
+        println("|_______|" + " " + "ESTADO CIVIL=>" + " " + baseDatos(0).civil)
+        println("Desea Seguir a este Perfil o mandar Un mensaje: ")
+        tecladoReactivo.nextLine()
+        var perfil:String=tecladoReactivo.nextLine()
+        if (perfil.toLowerCase().equals("seguir")){
+          //llamada de funcion seguir y funcion reactiva reactiva
+        }else if(perfil.toLowerCase().equals("mensaje")){
+          //llamada de funcion mensaje y funcion reactiva
+        }else{
+          println("Error solo puede seguir al usuario o mandarle un Mensaje")
+          perfilBaseDatos(baseDatos)
+        }
+      }
+    }
+    def searchPerson(caseClasUsuarios:ListBuffer[usuario],argumento:String):ListBuffer[usuario]= {
+      var listaLocalSearch:ListBuffer[usuario]=ListBuffer[usuario]()
+      val nombreDesfragmentado:ListBuffer[Array[Char]]=caseClasUsuarios.map(datos=>datos.nombre.toCharArray.take(4))
+      var desfragmentacion:Array[Char]=argumento.toCharArray.take(5)
+      listaLocalSearch
+    }
+
+
+
+
+
+
+    ///////////////////////////////////
+    def menuReactivo(): Unit = {
+      println("------------------------------------")
+      println("Bienbenido=> "+" ")
+      println("------------------------------------")
+      println("1.Mandar Un mensaje a tus Contactos")
+      println("------------------------------------")
+      println("2.Buscar Personas                   ")
+      println("------------------------------------")
+      println("3.Eliminar Contactos                ")
+      println("-------------------------------------")
+      println("4.Ver perfil de tu Cuenta            ")
+      println("-------------------------------------")
+      println("5.Publicar una Hisoria               ")
+      println("-------------------------------------")
+      println("6.Cerrar Seccion                     ")
+      println("-------------------------------------")
+      println("Eliga una Opcion: ")
+      var eleccion: Int = tecladoReactivo.nextInt()
+      eleccion match
+        case 1 => {
+
+        }
+        case 2 => {
+          def busqueda(): Unit = {
+            var flagIndice: Int = 0
+            var perfilSeleccionado: ListBuffer[usuario] = ListBuffer[usuario]()
+            if (flagLine2){
+              tecladoReactivo.nextLine()
+              flagLine2=false
+            }
+            println("Escribe el Nombre de la persona para Buscar: ")
+            var argumento: String = tecladoReactivo.nextLine()
+            var devolucion: ListBuffer[usuario] = searchPerson(baseDatos,argumento)
+            if (!devolucion.isEmpty) {
+              var tam: Int = devolucion.length
+              devolucion.foreach(usuario => println(s"${flagIndice + 1}.${"NOMBRE:"+" "+usuario.nombre+"\n"} => ${"EDAD:"+" "+usuario.edad+"\n"} => ${"NACIONALIDAD:"+" "+usuario.nacionalidad+"\n"}"))
+              def forRecursivo(): Unit = {
+                println(s"Escoge del 1 al $tam para elegir la persona para ver su perfil: ")
+                var eleccion: Int = tecladoReactivo.nextInt()
+                if (eleccion<=tam && eleccion>0){
+                  perfilSeleccionado += devolucion(eleccion - 1)
+                  perfilBaseDatos(perfilSeleccionado)
+                }else{
+                  println(s"Error. solo hay $tam Resultados Seleciona cualquiera de ellas")
+                  forRecursivo()
+                }
+              }
+              forRecursivo()
+            } else {
+              println("Se Encontraron 0 Resultados")
+              busqueda()
+            }
+          }
+          busqueda()
+        }
+        case 3 => {
+
+        }
+        case 4=>{
+          reaccion=true
+          perfilBaseDatos(listEspecial)
+        }
+        case 5=>{
+
+        }
+        case 6=> {
+          println("Cerrando Seccion")
+          listEspecial.clear()
+          menuPrincipal()
+        }
+
+    }
+
+    def menuPrincipal():Unit={
+      println("---------------------------------")
+      println("MENU REACTIVO=>Elige Una Opcion ")
+      println("---------------------------------")
+      println("1.Entrar a la Cuenta             ")
+      println("---------------------------------")
+      println("2.Registrarte en la pagina       ")
+      println("---------------------------------")
+      println("3.Salir                          ")
+      println("---------------------------------")
+      println("Eliga una Opcion: ")
+      var eleccion: Int = tecladoReactivo.nextInt()
+      eleccion match
+        case 1 => {
+          def oneSecion(): Unit = {
+            if (flagLine) {
+              tecladoReactivo.nextLine()
+              flagLine=false
+            }
+            println("BIENBENIDO A =>SPACE_X")
+            println("escribe tu Contraseña: ")
+            var contrSecion: String = tecladoReactivo.nextLine()
+            var tamList: Int = baseDatos.length
+            def busquedaSecion(): Unit = {
+              if (indiceTaken == tamList) {
+                println("lo siento Usuario No Registrado")
+                indiceTaken=0
+                oneSecion()
+              } else {
+                var encontrado: String = baseDatos(indiceTaken).contra
+                if (contrSecion.equals(encontrado)) {
+                  indiceTaken = 0
+                  listEspecial+=baseDatos(indiceTaken)
+                  menuReactivo()
+                }
+                indiceTaken += 1
+                busquedaSecion()
+              }
+            }
+            busquedaSecion()
+          }
+          oneSecion()
+        }
+        case 2 => {
+          var edad: String = "0"
+          println("Registro=>Opcion Numero 2")
+          println("Escribe Tu Nombre Completo: ")
+          tecladoReactivo.nextLine()
+          var nombre: String = tecladoReactivo.nextLine()
+          println("crea Una Contraseña: ")
+          var contrase: String = tecladoReactivo.nextLine()
+          def ageLimit(): Unit = {
+            println("Escribe tu edad: ")
+            edad=tecladoReactivo.nextLine()
+            if (edad.toInt<=60){
+              return edad
+            }else{
+              println("edad no admitida intenta de Nuevo")
+              ageLimit()
+            }
+          }
+          ageLimit()
+          println("donde Estudiastes o eres estudiante: ")
+          var estudiante: String = tecladoReactivo.nextLine()
+          if (estudiante.toLowerCase().equals("soy estudiante")) {
+            estudiante = estiudent
+          }
+          println("Escribe tu nacionalidad: ")
+          var nacionalidad: String = tecladoReactivo.nextLine()
+          def civilFuntion(): Unit = {
+            println("Estado Civil Actual: ")
+            var civil: String = tecladoReactivo.nextLine()
+            if (civil.toLowerCase().equals("casado") || civil.toLowerCase().equals("soltero") || civil.toLowerCase().equals("divorsiado")) {
+              var instancia: usuario = usuario(nombre, contrase, edad, estudiante, nacionalidad, civil)
+              baseDatos += instancia
+              listEspecial += instancia
+              println("Registro Exitoso.Redirigiendo Pagina")
+              menuReactivo()
+            } else {
+              println("Error estado civil Invalido")
+              civilFuntion()
+            }
+          }
+          civilFuntion()
+        }
+        case 3 => {
+
+        }
+    }
+    menuPrincipal()
+  }
+}
